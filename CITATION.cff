@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite NAGO: Noise-Aware Generative Operator via Flow Matching."
+title: "NAGO: Noise-Aware Generative Operator via Flow Matching"
+type: software
+authors:
+  - family-names: Chen
+    given-names: Guanyu
+  - family-names: Xu
+    given-names: Shengze
+  - family-names: Liu
+    given-names: Pengwei
+  - family-names: Ren
+    given-names: Xingyu
+  - family-names: Wang
+    given-names: Pengkai
+  - family-names: Armaou
+    given-names: Antonios
+  - family-names: Zeng
+    given-names: Tieyong
+  - family-names: Ni
+    given-names: Dong
+repository-code: "https://github.com/cgymmy/NAGO"

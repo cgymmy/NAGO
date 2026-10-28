@@ -1,0 +1,75 @@
+device: cuda:0
+
+train:
+  seed: 42
+  # max_steps: 500
+  max_iter: 4000
+  batch_size: 64 
+
+  log_freq: 50
+  val_freq: 200
+  save_freq: 2000
+  max_grad_norm: 100.0
+  valid_max_batch: 32
+
+  optimizer:
+    type: adam
+    lr: 3.e-4 
+    weight_decay: 0.0
+    beta1: 0.9
+    beta2: 0.999
+
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-4
+
+datasets: 
+  dim: &_dim 2
+  L: &_h 1.0
+  res: &_res 128
+  nu: 2.0
+  ell: 0.1
+
+
+noise:
+  noise_type: gaussian # matern/white/gaussian
+  intp_type: linear
+  dim: *_dim
+  L: *_h
+  res: &_gen_res 128
+  nu: 1.0
+  ell: 0.05
+
+model_type: fno
+
+fno:
+  type: fno
+  n_modes: [16, 16]
+  channels: &_c 1
+  emb_channels: 64
+  hidden_channels: 64
+  proj_channels: 256
+  n_layers: 4
+
+unet:
+  type: unet
+  num_classes: 1
+  in_channels: *_c
+  out_channels: *_c
+  dim: 32
+  cond_channels: 0
+  dim_mults: [1, 2, 2, 2]
+  resnet_block_groups: 8
+  learned_sinusoidal_dim: 32
+  attn_dim_head: 32
+  attn_heads: 4
+  learned_sinusoidal_cond: true
+  random_fourier_features: false
+  use_classes: False
+
+
+n_sample: 2000
+n_eval: 10
+sample_dims: [*_c, *_gen_res, *_gen_res] 

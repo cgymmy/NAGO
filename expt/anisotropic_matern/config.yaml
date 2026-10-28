@@ -1,0 +1,63 @@
+device: cuda:0
+
+train:
+  seed: 42
+  max_iter: 4000
+  num_train: 12288
+  num_valid: 1536
+  batch_size: 1024
+  valid_batch_size: 32
+  log_freq: 25
+  val_freq: 200
+  save_freq: 1000
+  valid_max_batch: 4
+  max_grad_norm: 100.0
+  # neuralop's cuFFT path supports FP16 (power-of-two grids), not BF16.
+  amp: fp16
+
+  optimizer:
+    type: adam
+    lr: 3.e-4
+    weight_decay: 0.0
+    beta1: 0.9
+    beta2: 0.999
+    foreach: true
+
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-4
+
+target:
+  dim: 2
+  L: 1.0
+  res: &res 128
+  nu: 2.0
+  ell_x: 0.10
+  ell_y: 0.05
+  theta_deg: 30.0
+
+noise:
+  noise_type: gaussian
+  intp_type: linear
+  dim: 2
+  L: 1.0
+  res: *res
+  nu: 1.0
+  ell: 0.05
+
+model_type: fno
+
+fno:
+  type: fno
+  n_modes: [32, 32]
+  channels: &channels 1
+  emb_channels: 64
+  hidden_channels: 64
+  proj_channels: 256
+  n_layers: 4
+
+n_sample: 1024
+n_eval: 10
+sample_dims: [*channels, *res, *res]

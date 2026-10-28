@@ -1,0 +1,78 @@
+# ac equation
+device: cuda:0
+
+train:
+  seed: 42
+  # max_steps: 500
+  max_iter: 10000
+  batch_size: 512 
+
+  log_freq: 50
+  val_freq: 2000
+  save_freq: 2000
+  max_grad_norm: 100.0
+  valid_max_batch: 32
+
+  t_min: 1e-4
+
+  optimizer:
+    type: adam
+    lr: 3.e-4 
+    weight_decay: 0.0
+    beta1: 0.9
+    beta2: 0.999
+
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-4
+
+datasets: 
+  seed: 42
+  C: &_c 1
+  grid_size: 64
+  dim: 64          # = grid_size
+  batch_size: 1000
+  train_test_split: 0.9
+  subsampling_ratio: 1.0
+
+
+noise:
+  noise_type: matern # white & matern & gaussian
+  intp_type: linear
+  dim: 1
+  L: 1.0
+  res: &_gen_res 64
+  nu: 0.5
+  ell: 0.05
+
+model_type: fno
+
+unet:
+  type: unet1d
+  dim: 32
+  channels: *_c
+  out_dim: *_c
+  cond_channels: 0
+  dim_mults: [1, 2, 2, 2]
+  resnet_block_groups: 8
+  learned_sinusoidal_dim: 32
+  attn_dim_head: 32
+  attn_heads: 4
+  learned_sinusoidal_cond: true
+  random_fourier_features: false
+
+fno:
+  type: fno
+  n_modes: [64]
+  channels: *_c
+  emb_channels: 64
+  hidden_channels: 64
+  proj_channels: 128
+  n_layers: 4
+
+n_sample: 1000
+n_eval: 10
+sample_dims: [1, *_gen_res] 
+
